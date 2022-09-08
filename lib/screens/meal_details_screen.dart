@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:meal_app/dummy_data.dart';
 import 'package:meal_app/widgets/custom_widgets.dart';
 import 'package:meal_app/constance.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/meal_provider.dart';
 
 class MealDetailsScreen extends StatelessWidget {
-  final Function? toggleFavorite;
-  final Function? isFav;
 
-  const MealDetailsScreen({this.toggleFavorite, this.isFav});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,14 @@ class MealDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(actions: [
         IconButton(
-            onPressed: ()=>toggleFavorite!(mealId),
-            icon: isFav!(mealId)
+            onPressed: ()=>Provider.of<MealProvider>(context, listen: false).toggleFavorite(mealId),
+            icon: Provider.of<MealProvider>(context, listen: true).isFavoriteMeal!
                 ? Icon(Icons.favorite)
                 : Icon(Icons.favorite_border))
       ], title: Text(selectedMeal.title!)),
       body: Stack(children: [
         Background(
-          image: 'assets/images/black.jpg',
+          image: 'assets/images/brown.jpg',
         ),
         Padding(
           padding: EdgeInsets.all(10),

@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:meal_app/dummy_data.dart';
 import 'package:meal_app/widgets/custom_widgets.dart';
-
-import '../models/meal.dart';
+import 'package:provider/provider.dart';
+import '../providers/meal_provider.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final Function? saveFilters;
-  final Map<String?, bool?> currentFilter;
-
-  const SettingsScreen({this.saveFilters, required this.currentFilter});
-
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool? isGlutenFree = false;
-  bool? isLactoseFree = false;
-  bool? isVegan = false;
-  bool? isVegetarian = false;
   List filter = [
     {'title': 'Gluten', 'caption': 'Only include gluten-free meals.'},
     {'title': 'Lactose', 'caption': 'Only include lactose-free meals.'},
@@ -27,16 +17,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ];
 
   @override
-  initState() {
-    isGlutenFree = widget.currentFilter['gluten'];
-    isLactoseFree = widget.currentFilter['lactose'];
-    isVegan = widget.currentFilter['vegan'];
-    isVegetarian = widget.currentFilter['vegetarian'];
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final Map<String?, bool?> currentFilter =
+        Provider.of<MealProvider>(context, listen: true).filters;
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
@@ -45,85 +28,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/black.jpg',
+                  'assets/images/brown.jpg',
                 ),
                 fit: BoxFit.fill)),
         child: Column(children: [
           Container(
             height: 600,
             width: 600,
+            margin: EdgeInsets.all(10),
             child: ListView(
               children: [
                 SizedBox(
                   height: 20,
                 ),
                 SwitchTile(
-                    val: isGlutenFree,
+                    val: currentFilter['gluten'],
                     name: filter[0]['title'],
                     caption: filter[0]['caption'],
                     change: (value) {
                       setState(() {
-                        isGlutenFree = value;
+                        currentFilter['gluten'] = value;
                       });
+                      Provider.of<MealProvider>(context, listen: false)
+                          .setFilters();
                     }),
                 SizedBox(
                   height: 20,
                 ),
                 SwitchTile(
-                    val: isLactoseFree,
+                    val: currentFilter['lactose'],
                     name: filter[1]['title'],
                     caption: filter[1]['caption'],
                     change: (value) {
                       setState(() {
-                        isLactoseFree = value;
+                        currentFilter['lactose'] = value;
                       });
+                      Provider.of<MealProvider>(context, listen: false)
+                          .setFilters();
                     }),
                 SizedBox(
                   height: 20,
                 ),
                 SwitchTile(
-                    val: isVegan,
+                    val: currentFilter['vegan'],
                     name: filter[2]['title'],
                     caption: filter[2]['caption'],
                     change: (value) {
                       setState(() {
-                        isVegan = value;
+                        currentFilter['vegan'] = value;
                       });
+                      Provider.of<MealProvider>(context, listen: false)
+                          .setFilters();
                     }),
                 SizedBox(
                   height: 20,
                 ),
                 SwitchTile(
-                    val: isVegetarian,
+                    val: currentFilter['vegetarian'],
                     name: filter[3]['title'],
                     caption: filter[3]['caption'],
                     change: (value) {
                       setState(() {
-                        isVegetarian = value;
+                        currentFilter['vegetarian'] = value;
                       });
+                      Provider.of<MealProvider>(context, listen: false)
+                          .setFilters();
                     }),
               ],
             ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  final Map<String?, bool?> selectedFilters = {
-                    'gluten': isGlutenFree!,
-                    'lactose': isLactoseFree!,
-                    'vegan': isVegan!,
-                    'vegetarian': isVegetarian!,
-                  };
-                  widget.saveFilters!(selectedFilters);
-                  print('done');
-                });
-              },
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15))),
-                  padding: MaterialStateProperty.all(EdgeInsets.only(
-                      left: 50, right: 50, bottom: 20, top: 20))),
-              child: Text('Save')),
         ]),
       ),
     ));

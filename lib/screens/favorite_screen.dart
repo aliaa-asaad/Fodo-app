@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/providers/meal_provider.dart';
 import 'package:meal_app/widgets/custom_widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../models/meal.dart';
 import '../widgets/items/meal_card.dart';
 
 class FavoriteScreen extends StatelessWidget {
-  final List<Meal> favoriteMeals;
-
-  const FavoriteScreen({required this.favoriteMeals});
-
   @override
   Widget build(BuildContext context) {
+    final List<Meal> favoriteMeals=Provider.of<MealProvider>(context,listen: true).favoriteMeals;
     return Scaffold(
       body: Stack(children: [
         Background(
-          image: 'assets/images/black.jpg',
+          image: 'assets/images/brown.jpg',
         ),
         favoriteMeals.isEmpty
             ? Center(
